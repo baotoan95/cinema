@@ -1,0 +1,15 @@
+cinema:
+  host: localhost
+  port: 8080
+  database:
+    name: cinema
+    username: postgres
+    password: root
+    host: localhost
+    port: 5432
+    dialect: postgres
+    idle: 10000
+    max: 
+    min: 0
+    acquire: 30000
+    logging: false
