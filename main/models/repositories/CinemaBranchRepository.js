@@ -28,14 +28,15 @@ findById = async (id) => {
     }
 }
 
-findAll = async (page, size) => {
+findAll = async (page, size, filter) => { 
     try {
         return await CinemaBranches.findAll({
             offset: page,
             limit: size,
             order: [
                 ['updated_at', 'DESC']
-            ]
+            ],
+            where: filter
         });
     } catch (err) {
 

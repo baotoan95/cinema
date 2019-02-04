@@ -87,17 +87,18 @@ findById = async (id) => {
     }
 }
 
-findAll = async (room, size) => {
+findAll = async (room, size, filter) => {
     try {
         return await Rooms.findAll({
             offset: room,
             limit: size,
             order: [
                 ['updated_at', 'DESC']
-            ]
+            ],
+            where: filter
         });
     } catch (err) {
-
+        throw err;
     }
 }
 

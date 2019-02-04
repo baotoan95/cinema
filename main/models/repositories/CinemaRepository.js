@@ -38,7 +38,7 @@ findAll = async (page, size) => {
             ]
         });
     } catch (err) {
-
+        throw err;
     }
 }
 

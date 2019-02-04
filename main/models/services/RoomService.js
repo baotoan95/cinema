@@ -1,6 +1,7 @@
 const RoomRepo = require('../repositories/RoomRepository');
 const ResponseEntityFactory = require('../../core/ResponseEntityFactory');
 const ResponseStatus = require('../../constants/ResponseStatus');
+const pagination = require('../../utils/pagination');
 
 create = async (req) => {
     try {
@@ -28,13 +29,9 @@ update = async (req) => {
 }
 
 findAll = async (req) => {
-    const page = req.query.room || 0;
-    let size = req.query.size || 0;
+    const paging = pagination(req);
     try {
-        if (size <= 0) {
-            size = Number.MAX_SAFE_INTEGER;
-        }
-        const data = await RoomRepo.findAll(page, size);
+        const data = await RoomRepo.findAll(paging.page, paging.size);
         return ResponseEntityFactory.getResponseEntity(ResponseStatus.OK, null, data);
     } catch (err) {
         throw ResponseEntityFactory.getResponseEntity(ResponseStatus.SERVER_INTERNAL_ERROR, err);
@@ -68,10 +65,26 @@ deleteRoom = async (req) => {
     }
 }
 
+findRoomByCinemaBranch = async (req) => {
+    const cinemaBranchId = req.params.id;
+    const paging = pagination(req);
+    if (cinemaBranchId) {
+        try {
+            const rooms = await RoomRepo.findAll(paging.page, paging.size, {cinema_branch_id: cinemaBranchId});
+            return ResponseEntityFactory.getResponseEntity(ResponseStatus.OK, null, rooms);
+        } catch (err) {
+            throw ResponseEntityFactory.getResponseEntity(ResponseStatus.SERVER_INTERNAL_ERROR, err);
+        }
+    } else {
+        throw ResponseEntityFactory.getResponseEntity(ResponseStatus.BAD_REQUEST, 'Missing cinema branch ID', null);
+    }
+}
+
 module.exports = {
     create,
     update,
     findAll,
     findById,
-    delete: deleteRoom
+    delete: deleteRoom,
+    findRoomByCinemaBranch
 }

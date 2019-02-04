@@ -1,6 +1,7 @@
 const UserRepo = require('../repositories/UserRepository');
 const ResponseEntityFactory = require('../../core/ResponseEntityFactory');
 const ResponseStatus = require('../../constants/ResponseStatus');
+const pagination = require('../../utils/pagination');
 
 create = async (req) => {
     try {
@@ -34,13 +35,12 @@ update = async (req) => {
 }
 
 findAll = async (req) => {
-    const page = req.query.page || 0;
-    let size = req.query.size || 0;
+    const paging = pagination(req);
     try {
         if (size <= 0) {
             size = Number.MAX_SAFE_INTEGER;
         }
-        const data = await UserRepo.findAll(page, size);
+        const data = await UserRepo.findAll(paging.page, pagingsize);
         return ResponseEntityFactory.getResponseEntity(ResponseStatus.OK, null, data);
     } catch (err) {
         throw ResponseEntityFactory.getResponseEntity(ResponseStatus.SERVER_INTERNAL_ERROR, err);

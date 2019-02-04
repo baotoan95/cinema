@@ -1,6 +1,7 @@
 const CinemaBranchRepo = require('../repositories/CinemaBranchRepository');
 const ResponseEntityFactory = require('../../core/ResponseEntityFactory');
 const ResponseStatus = require('../../constants/ResponseStatus');
+const pagination = require('../../utils/pagination');
 
 create = async (req) => {
     try {
@@ -28,13 +29,9 @@ update = async (req) => {
 }
 
 findAll = async (req) => {
-    const page = req.query.page || 0;
-    let size = req.query.size || 0;
+    const paging = pagination(req);
     try {
-        if (size <= 0) {
-            size = Number.MAX_SAFE_INTEGER;
-        }
-        const data = await CinemaBranchRepo.findAll(page, size);
+        const data = await CinemaBranchRepo.findAll(paging.page, pagin.size);
         return ResponseEntityFactory.getResponseEntity(ResponseStatus.OK, null, data);
     } catch (err) {
         throw ResponseEntityFactory.getResponseEntity(ResponseStatus.SERVER_INTERNAL_ERROR, err);
@@ -68,10 +65,21 @@ deleteCinemaBranch = async (req) => {
     }
 }
 
+findBranchByCinema = async (req) => {
+    const paging = pagination(req);
+    try {
+        const branches = await CinemaBranchRepo.findAll(paging.page, paging.size, {cinema_id: req.params.id});
+        return ResponseEntityFactory.getResponseEntity(ResponseStatus.OK, null, branches || []);
+    } catch (err) {
+        return ResponseEntityFactory.getResponseEntity(ResponseStatus.SERVER_INTERNAL_ERROR, null, null);
+    }
+}
+
 module.exports = {
     create,
     update,
     findAll,
     findById,
-    delete: deleteCinemaBranch
+    delete: deleteCinemaBranch,
+    findBranchByCinema
 }

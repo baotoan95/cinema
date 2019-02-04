@@ -18,5 +18,8 @@ router.get('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     BaseController.excute(req, res, null, null, CinemaBranchService.delete);
 });
+router.get('/cinema/:id', (req, res) => {
+    BaseController.excute(req, res, null, null, CinemaBranchService.findBranchByCinema);
+});
 
 module.exports = router;

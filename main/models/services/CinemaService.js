@@ -1,6 +1,7 @@
 const CinemaRepo = require('../repositories/CinemaRepository');
 const ResponseEntityFactory = require('../../core/ResponseEntityFactory');
 const ResponseStatus = require('../../constants/ResponseStatus');
+const pagination = require('../../utils/pagination');
 
 create = async (req) => {
     try {
@@ -28,13 +29,9 @@ update = async (req) => {
 }
 
 findAll = async (req) => {
-    const page = req.query.page || 0;
-    let size = req.query.size || 0;
+    const paging = pagination(req);
     try {
-        if (size <= 0) {
-            size = Number.MAX_SAFE_INTEGER;
-        }
-        const data = await CinemaRepo.findAll(page, size);
+        const data = await CinemaRepo.findAll(paging.page, paging.size);
         return ResponseEntityFactory.getResponseEntity(ResponseStatus.OK, null, data);
     } catch (err) {
         throw ResponseEntityFactory.getResponseEntity(ResponseStatus.SERVER_INTERNAL_ERROR, err);
