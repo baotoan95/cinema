@@ -34,7 +34,7 @@ create = async (room) => {
 
 update = async (room) => {
     const txn = await sequelizer.transaction({
-        autocommit: false
+        autocommit: true
     });
     try {
         const existingRoom = await Rooms.findById(room.id);
